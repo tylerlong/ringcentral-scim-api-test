@@ -12,5 +12,25 @@ import RingCentral from 'ringcentral-js-concise'
     password: process.env.RINGCENTRAL_PASSWORD
   })
   console.log(rc.token())
+
+  const r = await rc.post('/scim/v2/Users', {
+    emails: [
+      {
+        type: 'work',
+        value: 'tyler.liu.random@ringcentral.com'
+      }
+    ],
+    name: {
+      familyName: 'Liu',
+      givenName: 'Tyler'
+    },
+    schemas: ['urn:ietf:params:scim:schemas:core:2.0:User'],
+    userName: 'tyler.liu.random@ringcentral.com'
+  })
+
+  const user = r.data
+  console.log(user)
+
+  await rc.delete(`/scim/v2/Users/${user.id}`)
   await rc.revoke()
 })()
